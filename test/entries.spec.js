@@ -25,4 +25,11 @@ describe("Date parsing", () => {
 		
 		assert.equal(splitEntry.length, 2);
 	});
+	it("returns undefined if no event is supplied after the delimiter.", () => {
+		const entry = "abcde/";
+		const delim = "/";
+		const splitEntry = splitCalenderEntry(entry, delim);
+		
+		assert.equal(splitEntry, undefined);
+	});
 });

@@ -7,8 +7,13 @@ const error = {
 const entryDelim = "/";
 
 function splitCalenderEntry(str, delim = "/") {
-	if (!str) return;
-	 return str.split(delim).length === 2 ? [...str.split(delim)] : [];
+	const idx = str && str.indexOf(delim);
+	if (!idx || idx < 0) return;
+
+	const first = str.substring(0, idx);
+	const rest = str.substring(idx + 1, str.length);
+
+	return first && rest ? [first, rest] : undefined;
 }
 
 module.exports = { splitCalenderEntry };

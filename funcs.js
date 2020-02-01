@@ -7,6 +7,7 @@ const rl = readline.createInterface({
 	output: process.stdout
 });
 
+const models = require('./models');
 const constants = require('./constants');
 
 const cleanStr = str => str.replace(/[\\$'"]/g, '\\$&');
@@ -19,21 +20,28 @@ function readUserSetting(key, file = constants.settings, callback) {
 	});
 }
 
+function writeUserSettings(userSettings) {
+	let data = JSON.stringify(userSettings, null, 2);
+
+	fs.writeFile(constants.settings, data, err => {
+		if (err) throw err;
+		console.log('Data written to file');
+	});
+}
+
 function configureSettings() {
 	rl.question(constants.questions.dbLocation, dbLocation => {
 		rl.question(constants.questions.outputLocation, outputLocation => {
-			console.log({ dbLocation, outputLocation });
+			const userSettings = new models.userSettings({
+				dbLocation,
+				outputLocation
+			});
+			console.log(userSettings);
+			writeUserSettings(userSettings);
 			rl.close();
 		});
 	});
 }
-
-//
-// fs.writeFile(fileName, JSON.stringify(file), function (err) {
-//   if (err) return console.log(err);
-//   console.log(JSON.stringify(file));
-//   console.log('writing to ' + fileName);
-// });
 
 /**
  * Function splitFirstRest: splits string on first instance of delimiter

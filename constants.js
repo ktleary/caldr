@@ -4,6 +4,9 @@ module.exports = Object.freeze({
 		BADENTRY: 'Could not read the supplied entry.',
 		BADDATE: 'Could not read the supplied date.'
 	},
+	commands: {
+		RESETCONFIG: 'reset-config'
+	},
 	settings: './user_settings.json',
 	defaultDB: '~/.config/caldr/db.json',
 	outputFile: '~/Documents/caldr.txt',

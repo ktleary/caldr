@@ -1,1 +1,4 @@
-{ "storage": "", "outputfile": "" }
+{
+  "dbLocation": "joe.json",
+  "outputLocation": "jbob.txt"
+}

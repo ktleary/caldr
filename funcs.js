@@ -29,27 +29,19 @@ function splitFirstRest(str, delim = '/') {
  * Function parseDateStrYMDHM: parses Date in date-time form (e.g. 2011-10-10T14:48:00)
  *
  * @param {string} datestr -date-time form
- * @return timestamp (user locale only)
+ * @return timestamp (user locale)
  *
  * @example
  *
  *     splitFirstRest('2020-02-14/"Valentine's Day"')
  */
 
+
 const parseDateStrYMDHM = datestr => {
 	if (!datestr) return;
-	const datetimeParts = datestr.split('T');
-	const datePart = datetimeParts[0];
-	const timePart = datetimeParts[1];
-	let [year, month, day] = datePart.split('-');
-	month && month--;
-	const [hour, minute, ...rest] = timePart.split(':');
-	const entryDate =
-		!!new Date(year, month, day, hour, minute) &&
-		new Date(year, month, day, hour, minute);
-
+	const entryDate = new Date(datestr);
 	!entryDate.getTime() && console.log(`Error: ${constants.errors.BADDATE}`);
-	return entryDate.getTime() ? entryDate : undefined;
+	return entryDate.getTime() ? entryDate.getTime() : undefined;
 };
 
 module.exports = { cleanStr, splitFirstRest, parseDateStrYMDHM };

@@ -48,10 +48,18 @@ describe('Date parsing', () => {
 
 		assert.equal(date, undefined);
 	});
-	it('returns the correct timestamp when a datetime string supplied.', () => {
+	it('returns the correct timestamp when a datetime string is supplied.', () => {
 		const datestr = '2011-10-10T14:48:00';
+		const dateTs = new Date(datestr).getTime();
 		const ts = parseDateStrYMDHM(datestr);
 
-		assert.equal(date, undefined);
+		assert.equal(dateTs, ts);
+	});
+		it('returns undefined when a malformed datetime string is supplied.', () => {
+		const datestr = '2011-10-1014:48:00';
+		const dateTs = new Date(datestr).getTime();
+		const ts = parseDateStrYMDHM(datestr);
+
+		assert.equal(ts, undefined);
 	});
 });

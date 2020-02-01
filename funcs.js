@@ -1,9 +1,39 @@
 'use strict';
 
+var fs = require('fs');
+const readline = require('readline');
+const rl = readline.createInterface({
+	input: process.stdin,
+	output: process.stdout
+});
+
 const constants = require('./constants');
-const entryDelim = '/';
 
 const cleanStr = str => str.replace(/[\\$'"]/g, '\\$&');
+
+function readUserSetting(key, file = constants.settings, callback) {
+	fs.readFile(file, (err, data) => {
+		if (err) throw err;
+		const settings = JSON.parse(data);
+		callback(settings[key]);
+	});
+}
+
+function configureSettings() {
+	rl.question(constants.questions.dbLocation, dbLocation => {
+		rl.question(constants.questions.outputLocation, outputLocation => {
+			console.log({ dbLocation, outputLocation });
+			rl.close();
+		});
+	});
+}
+
+//
+// fs.writeFile(fileName, JSON.stringify(file), function (err) {
+//   if (err) return console.log(err);
+//   console.log(JSON.stringify(file));
+//   console.log('writing to ' + fileName);
+// });
 
 /**
  * Function splitFirstRest: splits string on first instance of delimiter
@@ -26,7 +56,7 @@ function splitFirstRest(str, delim = '/') {
 }
 
 /**
- * Function parseDateStrYMDHM: parses Date in date-time form (e.g. 2011-10-10T14:48:00)
+ * Function parseDatestr parses Date in date-time form (e.g. 2011-10-10T14:48:00)
  *
  * @param {string} datestr -date-time form
  * @return timestamp (user locale)
@@ -36,12 +66,16 @@ function splitFirstRest(str, delim = '/') {
  *     splitFirstRest('2020-02-14/"Valentine's Day"')
  */
 
-
-const parseDateStrYMDHM = datestr => {
+const parseDatestr = datestr => {
 	if (!datestr) return;
 	const entryDate = new Date(datestr);
-	!entryDate.getTime() && console.log(`Error: ${constants.errors.BADDATE}`);
 	return entryDate.getTime() ? entryDate.getTime() : undefined;
 };
 
-module.exports = { cleanStr, splitFirstRest, parseDateStrYMDHM };
+module.exports = {
+	cleanStr,
+	readUserSetting,
+	configureSettings,
+	splitFirstRest,
+	parseDatestr
+};

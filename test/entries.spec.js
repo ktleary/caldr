@@ -1,7 +1,7 @@
 'use strict';
 
 const assert = require('chai').assert;
-const { splitFirstRest, parseDateStrYMDHM } = require('../funcs');
+const { splitFirstRest, parseDatestr } = require('../funcs');
 
 describe('Entry parsing', () => {
 	it('returns undefined when no argument is supplied.', () => {
@@ -44,21 +44,21 @@ describe('Entry parsing', () => {
 describe('Date parsing', () => {
 	it('returns undefined when no argument is supplied.', () => {
 		const datestr = undefined;
-		const date = parseDateStrYMDHM(datestr);
+		const date = parseDatestr(datestr);
 
 		assert.equal(date, undefined);
 	});
 	it('returns the correct timestamp when a datetime string is supplied.', () => {
 		const datestr = '2011-10-10T14:48:00';
 		const dateTs = new Date(datestr).getTime();
-		const ts = parseDateStrYMDHM(datestr);
+		const ts = parseDatestr(datestr);
 
 		assert.equal(dateTs, ts);
 	});
 		it('returns undefined when a malformed datetime string is supplied.', () => {
 		const datestr = '2011-10-1014:48:00';
 		const dateTs = new Date(datestr).getTime();
-		const ts = parseDateStrYMDHM(datestr);
+		const ts = parseDatestr(datestr);
 
 		assert.equal(ts, undefined);
 	});

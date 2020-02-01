@@ -7,16 +7,19 @@ const rl = readline.createInterface({
 	output: process.stdout
 });
 
+const utils = require('./utils');
 const models = require('./models');
 const constants = require('./constants');
 
 const cleanStr = str => str.replace(/[\\$'"]/g, '\\$&');
 
-function readUserSetting(key, file = constants.settings, callback) {
+function readUserSetting(file = constants.settings, callback) {
+	console.log(file);
 	fs.readFile(file, (err, data) => {
 		if (err) throw err;
 		const settings = JSON.parse(data);
-		callback(settings[key]);
+		console.log(settings);
+		callback(settings);
 	});
 }
 
@@ -25,19 +28,33 @@ function writeUserSettings(userSettings) {
 
 	fs.writeFile(constants.settings, data, err => {
 		if (err) throw err;
-		console.log('Data written to file');
+		console.log(
+			`Created configuration with database location: ${userSettings.dbLocation} and file output location: ${userSettings.fileLocation}.`
+		);
 	});
 }
 
 function configureSettings() {
-	rl.question(constants.questions.dbLocation, dbLocation => {
-		rl.question(constants.questions.outputLocation, outputLocation => {
-			const userSettings = new models.userSettings({
-				dbLocation,
-				outputLocation
+	rl.question(constants.questions.dbDir, dbDir => {
+		rl.question(constants.questions.publishDir, publishDir => {
+			if (dbDir === '') dbDir = constants.defaultDbDir;
+			if (publishDir === '') publishDir = constants.defaultPublishDir;
+			utils.ensureExists(dbDir, err => {
+				if (err) throw err;
+				utils.ensureExists(publishDir, err => {
+					if (err) throw err;
+					const dbLocation = `${dbDir}/${constants.dbFile}`;
+					const fileLocation = `${publishDir}/${constants.publishFile}`;
+					console.log({ dbLocation, fileLocation });
+
+					const userSettings = new models.userSettings({
+						dbLocation,
+						fileLocation
+					});
+					writeUserSettings(userSettings);
+				});
 			});
-			console.log(userSettings);
-			writeUserSettings(userSettings);
+
 			rl.close();
 		});
 	});

@@ -8,12 +8,14 @@ module.exports = Object.freeze({
 		RESETCONFIG: 'reset-config'
 	},
 	settings: './user_settings.json',
-	defaultDB: '~/.config/caldr/db.json',
-	outputFile: '~/Documents/caldr.txt',
+	defaultDbDir: `${process.env['HOME']}/.config/caldr`,
+	dbFile: 'db.json',
+	defaultPublishDir: `${process.env['HOME']}/Documents`,
+	publishFile: 'caldr.txt',
 	get questions() {
 		return {
-			dbLocation: `Where would you like to store the database? [${this.defaultDB}]? :`,
-			outputLocation: `Where would you like to output the file? [${this.outputFile}] :`
+			dbDir: `Where would you like to store the database? [${this.defaultDbDir}]? :`,
+			publishDir: `Where would you like to output the file? [${this.defaultPublishDir}] :`
 		};
 	}
 });

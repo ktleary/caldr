@@ -1,4 +1,4 @@
 {
-  "dbLocation": "joe.json",
-  "outputLocation": "jbob.txt"
+  "dbLocation": "/home/user/.config/caldr/db.json",
+  "fileLocation": "/home/user/Documents/caldr.txt"
 }

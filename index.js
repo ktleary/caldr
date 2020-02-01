@@ -1,15 +1,14 @@
 'use strict';
 
 const constants = require('./constants');
-const { readUserSetting, configureSettings } = require('./funcs');
-
+const { readUserSetting, configureSettings, processEntry } = require('./funcs');
 
 if (!process.argv[2]) return console.log(`Error: ${constants.errors.NOENTRY}`);
 const baseEntry = process.argv[2];
 readUserSetting(constants.settings, val =>
 	!val || baseEntry === constants.commands.RESETCONFIG
 		? configureSettings()
-		: console.log({ val })
+		: processEntry(baseEntry)
 );
 
 console.log({ baseEntry });

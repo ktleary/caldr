@@ -15,4 +15,12 @@ function ensureExists(path, mask, cb) {
 	});
 }
 
-module.exports = { ensureExists };
+function isJson(str) {
+	try {
+		return JSON.parse(str) && !!str;
+	} catch (e) {
+		return false;
+	}
+}
+
+module.exports = { ensureExists, isJson };

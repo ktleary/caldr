@@ -14,11 +14,9 @@ const constants = require('./constants');
 const cleanStr = str => str.replace(/[\\$'"]/g, '\\$&');
 
 function readUserSetting(file = constants.settings, callback) {
-	console.log(file);
 	fs.readFile(file, (err, data) => {
 		if (err) throw err;
 		const settings = JSON.parse(data);
-		console.log(settings);
 		callback(settings);
 	});
 }
@@ -45,19 +43,59 @@ function configureSettings() {
 					if (err) throw err;
 					const dbLocation = `${dbDir}/${constants.dbFile}`;
 					const fileLocation = `${publishDir}/${constants.publishFile}`;
-					console.log({ dbLocation, fileLocation });
-
-					const userSettings = new models.userSettings({
+					const userSettings = new models.UserSettings({
 						dbLocation,
 						fileLocation
 					});
 					writeUserSettings(userSettings);
+					rl.close();
 				});
 			});
-
-			rl.close();
 		});
 	});
+}
+
+function insertEntry(ts, entry) {
+	readUserSetting(constants.settings, settings => {
+		const dbLocation = settings.dbLocation;
+		let db = {};
+		let data = "";
+		console.log({ dbLocation });
+		if (!fs.existsSync(settings.dbLocation)) {
+			console.log('No database was found -- initializing ...');
+			db[ts] = [entry];
+			data = JSON.stringify(db, null, 2);
+			fs.writeFile(dbLocation, data, err => {
+				if (err) throw err;
+				console.log(
+					`Inserted new event: ${new Date(ts)} :  ${entry}.`
+				);
+			});
+		} else {
+			fs.readFile(dbLocation, (err, data) => {
+				if (err) throw err;
+				db = utils.isJson(data) ? JSON.parse(data) : {};
+				if (!db[ts]) {
+					db[ts] = [entry];
+				} else {
+					db[ts].push(entry);
+				}
+
+				data = JSON.stringify(db, null, 2);
+				fs.writeFile(dbLocation, data, err => {
+					if (err) throw err;
+					console.log(`Inserted new event: ${new Date(ts)} :  ${entry}.`);
+				});
+			});
+		}
+	});
+}
+
+function processEntry(baseEntry) {
+	if (!baseEntry) return console.log('Missing Caldr Entry.');
+	const [datestr, entry] = splitFirstRest(baseEntry);
+	const ts = parseDatestr(datestr);
+	insertEntry(ts, entry);
 }
 
 /**
@@ -73,6 +111,7 @@ function configureSettings() {
  */
 
 function splitFirstRest(str, delim = '/') {
+	console.log({ str, delim });
 	const idx = str && str.indexOf(delim);
 	if (!idx || idx < 0) return;
 	const first = str.substring(0, idx);
@@ -102,5 +141,6 @@ module.exports = {
 	readUserSetting,
 	configureSettings,
 	splitFirstRest,
-	parseDatestr
+	parseDatestr,
+	processEntry
 };

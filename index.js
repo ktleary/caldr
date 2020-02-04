@@ -31,9 +31,6 @@ const run = async () => {
 
 	(!_dbExists || baseEntry === constants.commands.RESETCONFIG) &&
 		userSettings.setUserSettings();
-
-	console.log({ _dbExists, baseEntry });
 };
 
 run();
-

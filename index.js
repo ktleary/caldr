@@ -1,17 +1,39 @@
 'use strict';
 
-const constants = require('./constants');
-const { readUserSetting, configureSettings, processEntry } = require('./funcs');
+const fs = require('fs');
+const chalk = require('chalk');
+const clear = require('clear');
+const figlet = require('figlet');
+const Configstore = require('configstore');
 
-if (!process.argv[2]) return console.log(`Error: ${constants.errors.NOENTRY}`);
-const baseEntry = process.argv[2];
-readUserSetting(constants.settings, val =>
-	!val || baseEntry === constants.commands.RESETCONFIG
-		? configureSettings()
-		: processEntry(baseEntry)
+const files = require('./lib/files');
+
+const systemSettings = require('./systemSettings');
+const userSettings = require('./lib/userSettings');
+const constants = require('./constants');
+
+clear();
+
+console.log(
+	chalk.yellow(figlet.textSync('caldr', { horizontalLayout: 'full' }))
 );
 
-console.log({ baseEntry });
-// const [datestr, eventstr] = baseEntry.split('/');
-// const ts = Date.parse(datestr);
-// console.log(Date.parse(datestr).UTC());
+const dbExists = () => {
+	const files = fs.readdirSync(`${systemSettings.locations.defaultDbDir}`);
+	return files.includes(`${systemSettings.locations.dbFile}`);
+};
+
+const run = async () => {
+	if (!process.argv[2])
+		return console.log(`Error: ${constants.errors.NOENTRY}`);
+	const baseEntry = process.argv[2];
+	const _dbExists = dbExists();
+
+	(!_dbExists || baseEntry === constants.commands.RESETCONFIG) &&
+		userSettings.setUserSettings();
+
+	console.log({ _dbExists, baseEntry });
+};
+
+run();
+

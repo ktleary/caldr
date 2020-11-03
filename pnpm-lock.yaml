@@ -7,7 +7,7 @@ dependencies:
   inquirer: 7.3.3
 devDependencies:
   chai: 4.2.0
-  mocha: 8.2.0
+  mocha: 8.2.1
 lockfileVersion: 5.2
 packages:
   /@ungap/promise-all-settled/1.1.2:
@@ -620,7 +620,7 @@ packages:
     dev: true
     resolution:
       integrity: sha512-yJHVQEhyqPLUTgt9B83PXu6W3rx4MvvHvSUvToogpwoGDOUQ+yDrR0HRot+yOCdCO7u4hX3pWft6kWBBcqh0UA==
-  /mocha/8.2.0:
+  /mocha/8.2.1:
     dependencies:
       '@ungap/promise-all-settled': 1.1.2
       ansi-colors: 4.1.1
@@ -652,7 +652,7 @@ packages:
       node: '>= 10.12.0'
     hasBin: true
     resolution:
-      integrity: sha512-lEWEMq2LMfNJMKeuEwb5UELi+OgFDollXaytR5ggQcHpzG3NP/R7rvixAvF+9/lLsTWhWG+4yD2M70GsM06nxw==
+      integrity: sha512-cuLBVfyFfFqbNR0uUKbDGXKGk+UDFe6aR4os78XIrMQpZl/nv7JYHcvP5MFIAb374b2zFXsdgEGwmzMtP0Xg8w==
   /ms/2.1.2:
     dev: true
     resolution:
@@ -1067,4 +1067,4 @@ specifiers:
   edit-json-file: ^1.5.0
   figlet: ^1.5.0
   inquirer: ^7.3.3
-  mocha: ^8.2.0
+  mocha: ^8.2.1
